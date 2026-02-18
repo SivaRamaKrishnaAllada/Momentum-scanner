@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from curl_cffi import requests
 import time
+from datetime import datetime
+import pytz
 
 st.set_page_config(page_title="NSE Live Pro", layout="wide")
 
@@ -29,7 +31,9 @@ def get_clean_data():
 @st.fragment(run_every=30)
 def scanner_fragment():
     # Visual Pulse to show refresh is working
-    st.caption(f"🔄 Last Update: {datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%H:%M:%S')} IST")
+    ist = pytz.timezone('Asia/Kolkata')
+    current_time = datetime.now(ist).strftime('%H:%M:%S')
+    st.caption(f"🔄 Last Update: {current_time} IST")
 
     raw_data = get_clean_data()
 
