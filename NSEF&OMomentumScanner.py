@@ -29,7 +29,7 @@ def get_clean_data():
 @st.fragment(run_every=30)
 def scanner_fragment():
     # Visual Pulse to show refresh is working
-    st.caption(f"🔄 Last Update: {time.strftime('%H:%M:%S')} IST")
+    st.caption(f"🔄 Last Update: {datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%H:%M:%S')} IST")
 
     raw_data = get_clean_data()
 
