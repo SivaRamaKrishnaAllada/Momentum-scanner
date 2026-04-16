@@ -41,27 +41,20 @@ def scanner_fragment():
         stocks = []
         for item in raw_data:
             if item.get('symbol') and item.get('symbol') != 'NIFTY 50':
-                # Calculate Volume Change %
-                curr_vol = item.get('totalTradedVolume', 0)
-                prev_vol = item.get('lastDayQuantity', 0)
-
-                vol_change_pct = 0
-                if prev_vol and prev_vol > 0:
-                    vol_change_pct = ((curr_vol - prev_vol) / prev_vol) * 100
-
                 stocks.append({
                     "Symbol": item.get('symbol'),
                     "LTP": item.get('lastPrice'),
                     "% Change": item.get('pChange'),
-                    "Volume": curr_vol,
-                    "Vol Change %": vol_change_pct,  # Added next to Volume
-                    "High": item.get('dayHigh'),
-                    "Low": item.get('dayLow')
+                    "Volume": item.get('totalTradedVolume', 0),
+                    "D-High": item.get('dayHigh'),
+                    "D-Low": item.get('dayLow'),
+                    "52Week High": item.get('yearHigh'),
+                    "52 Week Low": item.get('yearLow')
                 })
 
         df = pd.DataFrame(stocks)
         # Conversion to numeric
-        for col in ["LTP", "% Change", "High", "Low", "Volume", "Vol Change %"]:
+        for col in ["LTP", "% Change", "D-High", "D-Low", "Volume", "52Week High", "52 Week Low"]:
             df[col] = pd.to_numeric(df[col], errors='coerce')
 
         # Main Sort (Retained original Price % Change sorting)
@@ -77,18 +70,18 @@ def scanner_fragment():
         format_mapping = {
             "LTP": "₹{:.2f}",
             "% Change": "{:+.2f}%",
-            "High": "₹{:.2f}",
-            "Low": "₹{:.2f}",
+            "D-High": "₹{:.2f}",
+            "D-Low": "₹{:.2f}",
             "Volume": "{:,}",
-            "Vol Change %": "{:+.2f}%"
+            "52Week High": "₹{:.2f}",
+            "52 Week Low": "₹{:.2f}"
         }
 
         with col1:
             st.success("🚀 **Top 20 Gainers**")
             st.dataframe(
                 df.head(20).style.format(format_mapping)
-                .background_gradient(subset=['% Change'], cmap='Greens')
-                .background_gradient(subset=['Vol Change %'], cmap='Oranges'),  # Subtle highlight for volume
+                .background_gradient(subset=['% Change'], cmap='Greens'),
                 use_container_width=True,
                 hide_index=True,
                 height=DF_HEIGHT
@@ -100,8 +93,7 @@ def scanner_fragment():
             losers = df.sort_values(by='% Change', ascending=True).head(20)
             st.dataframe(
                 losers.style.format(format_mapping)
-                .background_gradient(subset=['% Change'], cmap='Reds')
-                .background_gradient(subset=['Vol Change %'], cmap='Oranges'),
+                .background_gradient(subset=['% Change'], cmap='Reds'),
                 use_container_width=True,
                 hide_index=True,
                 height=DF_HEIGHT
