@@ -46,7 +46,7 @@ def scanner_fragment():
                     "LTP": item.get('lastPrice'),
                     "% Change": item.get('pChange'),
                     "Volume": item.get('totalTradedVolume', 0),
-                    "VWAP": item.get ('averagePrice'),
+                    "VWAP": item.get ('equity-vwap'),
                     "D-High": item.get('dayHigh'),
                     "D-Low": item.get('dayLow'),
                     "52Week High": item.get('yearHigh'),
