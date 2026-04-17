@@ -58,8 +58,15 @@ def scanner_fragment():
         for col in ["LTP", "% Change", "D-High", "D-Low", "Volume","VWAP", "52Week High", "52 Week Low"]:
             df[col] = pd.to_numeric(df[col], errors='coerce')
 
-        # Main Sort (Retained original Price % Change sorting)
-        df = df.sort_values(by='% Change', ascending=False).dropna()
+        # New code
+        # Drop rows ONLY if they don't have a '% Change' or 'LTP'
+        df = df.dropna(subset=['% Change', 'LTP'])
+
+        # Fill any other missing data (like VWAP) with 0 so the row survives
+        df = df.fillna(0)
+
+        # Then sort
+        df = df.sort_values(by='% Change', ascending=False)
 
         # Display Top 20 and Bottom 20
         col1, col2 = st.columns(2)
