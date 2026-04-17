@@ -46,6 +46,7 @@ def scanner_fragment():
                     "LTP": item.get('lastPrice'),
                     "% Change": item.get('pChange'),
                     "Volume": item.get('totalTradedVolume', 0),
+                    "VWAP": item.get ('equity-vwap'),
                     "D-High": item.get('dayHigh'),
                     "D-Low": item.get('dayLow'),
                     "52Week High": item.get('yearHigh'),
@@ -54,7 +55,7 @@ def scanner_fragment():
 
         df = pd.DataFrame(stocks)
         # Conversion to numeric
-        for col in ["LTP", "% Change", "D-High", "D-Low", "Volume", "52Week High", "52 Week Low"]:
+        for col in ["LTP", "% Change", "D-High", "D-Low", "Volume","VWAP" "52Week High", "52 Week Low"]:
             df[col] = pd.to_numeric(df[col], errors='coerce')
 
         # Main Sort (Retained original Price % Change sorting)
@@ -73,6 +74,7 @@ def scanner_fragment():
             "D-High": "₹{:.2f}",
             "D-Low": "₹{:.2f}",
             "Volume": "{:,}",
+            "VWAP":"₹{:.2f}",
             "52Week High": "₹{:.2f}",
             "52 Week Low": "₹{:.2f}"
         }
