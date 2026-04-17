@@ -54,7 +54,7 @@ def scanner_fragment():
 
         df = pd.DataFrame(stocks)
         # Conversion to numeric
-        for col in ["LTP", "% Change", "D-High", "D-Low", "Volume", "52Week High", "52 Week Low"]:
+        for col in ["LTP", "% Change", "D-High", "D-Low", "VWAP", "52Week High", "52 Week Low"]:
             df[col] = pd.to_numeric(df[col], errors='coerce')
 
         # Main Sort (Retained original Price % Change sorting)
