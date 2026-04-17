@@ -45,7 +45,7 @@ def scanner_fragment():
                     "Symbol": item.get('symbol'),
                     "LTP": item.get('lastPrice'),
                     "% Change": item.get('pChange'),
-                    "VWAP": item.get('VWAP', 0),
+                    "VWAP": item.get('VWAP'),
                     "D-High": item.get('dayHigh'),
                     "D-Low": item.get('dayLow'),
                     "52Week High": item.get('yearHigh'),
@@ -72,7 +72,7 @@ def scanner_fragment():
             "% Change": "{:+.2f}%",
             "D-High": "₹{:.2f}",
             "D-Low": "₹{:.2f}",
-            "VWAP": "{:,}",
+            "VWAP": "{:.2f}",
             "52Week High": "₹{:.2f}",
             "52 Week Low": "₹{:.2f}"
         }
