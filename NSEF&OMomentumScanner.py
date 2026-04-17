@@ -41,16 +41,24 @@ def scanner_fragment():
         stocks = []
         for item in raw_data:
             if item.get('symbol') and item.get('symbol') != 'NIFTY 50':
+                # Grab raw values directly from the API response
+                total_val = item.get('totalTradedValue', 0)
+                total_vol = item.get('totalTradedVolume', 0)
+                
+                # NSE's official VWAP is simply Value / Volume
+                # This ensures you don't get 0.00 if 'averagePrice' is null in the API
+                actual_vwap = (total_val / total_vol) if total_vol > 0 else 0
+                
                 stocks.append({
                     "Symbol": item.get('symbol'),
                     "LTP": item.get('lastPrice'),
                     "% Change": item.get('pChange'),
-                    "Volume": item.get('totalTradedVolume', 0),
-                    "VWAP": item.get('averagePrice', 0),
+                    "Volume": total_vol,
+                    "VWAP": actual_vwap,
                     "D-High": item.get('dayHigh'),
                     "D-Low": item.get('dayLow'),
                     "52Week High": item.get('yearHigh'),
-                    "52 Week Low": item.get('yearLow')
+                    "52 Week Low": item.get('yearLow'),
                 })
 
         df = pd.DataFrame(stocks)
